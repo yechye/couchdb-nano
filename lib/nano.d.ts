@@ -33,7 +33,7 @@ declare namespace nano {
     use<D>(db: string): DocumentScope<D>;
     scope<D>(db: string): DocumentScope<D>;
     request: Promise<any>;
-    relax: Promise<any>;
+    relax: (opts: any, callback?: any) => Promise<any>;
     dinosaur: Promise<any>;
     // http://docs.couchdb.org/en/latest/api/server/authn.html#cookie-authentication
     auth(username: string, userpass: string, callback?: Callback<DatabaseAuthResponse>): Promise<DatabaseAuthResponse>;
@@ -60,9 +60,9 @@ declare namespace nano {
 
   interface DatabaseScope {
     replication: {
-        enable(source, target, opts0, callback0?): any;
-        disable(id, rev, opts0, callback0?): any;
-        query(id, opts0, callback0?): any;
+      enable(source, target, opts0, callback0?): any;
+      disable(id, rev, opts0, callback0?): any;
+      query(id, opts0, callback0?): any;
     };
     // http://docs.couchdb.org/en/latest/api/database/common.html#put--db
     create(name: string, params?: DatabaseCreateParams, callback?: Callback<DatabaseCreateResponse>): Promise<DatabaseCreateResponse>;
@@ -189,7 +189,7 @@ declare namespace nano {
     ): Promise<DocumentFetchRevsResponse>;
     // http://docs.couchdb.org/en/latest/api/database/find.html#db-index
     createIndex(indexDef: CreateIndexRequest,
-                callback?:  Callback<CreateIndexResponse>
+      callback?: Callback<CreateIndexResponse>
     ): Promise<CreateIndexResponse>;
     multipart: Multipart<D>;
     attachment: Attachment;
@@ -261,16 +261,16 @@ declare namespace nano {
     view<V>(
       designname: string,
       viewname: string,
-      callback?: Callback<DocumentViewResponse<V,D>>
-    ): Promise<DocumentViewResponse<V,D>>;
+      callback?: Callback<DocumentViewResponse<V, D>>
+    ): Promise<DocumentViewResponse<V, D>>;
     // http://docs.couchdb.org/en/latest/api/ddoc/views.html#get--db-_design-ddoc-_view-view
     // http://docs.couchdb.org/en/latest/api/ddoc/views.html#post--db-_design-ddoc-_view-view
     view<V>(
       designname: string,
       viewname: string,
       params: DocumentViewParams,
-      callback?: Callback<DocumentViewResponse<V,D>>
-    ): Promise<DocumentViewResponse<V,D>>;
+      callback?: Callback<DocumentViewResponse<V, D>>
+    ): Promise<DocumentViewResponse<V, D>>;
     // http://docs.couchdb.org/en/latest/api/ddoc/views.html#get--db-_design-ddoc-_view-view
     // http://docs.couchdb.org/en/latest/api/ddoc/views.html#post--db-_design-ddoc-_view-view
     viewAsStream<V>(
@@ -300,7 +300,7 @@ declare namespace nano {
       callback?: Callback<any>
     ): Promise<any>;
     // http://docs.couchdb.org/en/latest/api/database/find.html#db-find
-    find(query: MangoQuery, callback?: Callback<MangoResponse<D>>): Promise <MangoResponse<D>>;
+    find(query: MangoQuery, callback?: Callback<MangoResponse<D>>): Promise<MangoResponse<D>>;
     server: ServerScope;
   }
 
@@ -1175,7 +1175,7 @@ declare namespace nano {
   }
 
   // http://docs.couchdb.org/en/latest/api/ddoc/views.html#get--db-_design-ddoc-_view-view
-  interface DocumentViewResponse<V,D> {
+  interface DocumentViewResponse<V, D> {
     // Offset where the document list started.
     offset: number;
 
@@ -1213,10 +1213,10 @@ declare namespace nano {
   }
 
   enum CombinationOperands {
-      $or = '$or',
-      $and = '$and',
-      $nor = '$nor',
-      $all = '$all'
+    $or = '$or',
+    $and = '$and',
+    $nor = '$nor',
+    $all = '$all'
   }
 
   type MangoSelector = { [key: string]: MangoSelector | MangoValue | MangoValue[]; }
